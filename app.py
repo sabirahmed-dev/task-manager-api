@@ -1,5 +1,6 @@
 from flask import Flask,request
 import sqlite3 as sq
+import os
 
 conn = sq.connect("tasks.db")
 
@@ -125,5 +126,7 @@ def delete_task(id):
     return {"success": True, "message": "task deleted"}, 200
     
 
+
+
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
