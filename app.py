@@ -1,4 +1,5 @@
 from flask import Flask,request
+from flask_cors import CORS
 import sqlite3 as sq
 import os
 
@@ -26,6 +27,7 @@ conn.close()
 
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/")
 def get_tasks():

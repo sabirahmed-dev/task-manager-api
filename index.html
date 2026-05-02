@@ -1,0 +1,21 @@
+<html>
+<head>
+    <title>Task App</title>
+</head>
+<body>
+    <h2>Task Manager</h2>
+    <input type = "text" id = "taskInput" placeholder = "Enter task">
+    <button>Add Task</button>
+    <ul id="taskList"></ul>
+    <script>
+        const API = "https://task-manager-api-ztg3.onrender.com";
+
+        async function loadTasks() {
+            const res = await fetch(API);
+            const data = await res.json();
+            console.log(data);
+        }
+        loadTasks();
+    </script>
+</body>
+</html>
