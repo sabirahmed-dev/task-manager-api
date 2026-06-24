@@ -1,1 +1,12 @@
+__pycache__/
+*.pyc
+
+venv/
+.env
+
 tasks.db
+
+.vscode/
+.idea/
+
+.DS_Storetasks.db

@@ -1,45 +1,80 @@
-# Task Manager API
+Task Manager CRUD API
 
-A simple REST API built using Flask and SQLite to manage tasks.
+A simple REST API built with Flask and SQLite that allows users to create, read, update, and delete tasks.
 
-## Features
-- Create a task (POST /tasks)
-- Get all tasks (GET /tasks)
-- Update a task (PUT /tasks/<id>)
-- Delete a task (DELETE /tasks/<id>)
+Features
 
-## Tech Stack
-- Python
-- Flask
-- SQLite
+* Create a new task
+* View all tasks
+* Update an existing task
+* Delete a task
+* SQLite database integration
+* RESTful API design
+* Deployable with Gunicorn and Render
 
-## Functionality
-- Performs CRUD operations
-- Validates user input
-- Uses proper HTTP status codes
-- Handles errors (invalid input, task not found)
+Tech Stack
 
-## Example Request
+* Python
+* Flask
+* SQLite
+* Gunicorn
+* Render
+
+API Endpoints
+
+Get All Tasks
+
+GET /tasks
+
+Create Task
 
 POST /tasks
 
-json {   "task": "study" } 
+Request Body:
 
-## Example Response
+{
+    "task": "Learn Flask"
+}
 
-json {   "success": true,   "message": "task added" } 
+Update Task
 
-## How to Run
+PUT /tasks/<id>
 
-1. Install dependencies:
-bash pip install flask 
+Request Body:
 
-2. Run the server:
-bash python app.py 
+{
+    "task": "Learn Flask API",
+    "status": "completed"
+}
 
-3. Open in browser or Postman:
-http://127.0.0.1:5000/tasks
+Delete Task
 
-## Purpose
+DELETE /tasks/<id>
 
-This project was built to understand backend development, API design, and database integration using Python.
+Installation
+
+Clone the repository:
+
+git clone <your-repository-url>
+cd task-manager-api
+
+Install dependencies:
+
+pip install -r requirements.txt
+
+Run the application:
+
+python app.py
+
+Deployment
+
+This project can be deployed on Render using Gunicorn.
+
+Start Command:
+
+gunicorn app:app
+
+Author
+
+Sabir Ahmed
+BCA Student | Backend Developer Learning Journey
