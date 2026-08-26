@@ -1,8 +1,15 @@
+Perfect. 🔥 Here is the **final shorter README** with your live Render URL and the correct current structure:
+
+````markdown
 # 🚀 Task Manager API
 
 A full-stack task management application built with **FastAPI, PostgreSQL, SQLAlchemy, Pydantic, HTML, CSS, and JavaScript**.
 
 The project was originally built with Flask + SQLite and later upgraded to FastAPI + PostgreSQL.
+
+## 🌐 Live API
+
+https://task-manager-api-1-xy2g.onrender.com
 
 ## ✨ Features
 
@@ -28,7 +35,7 @@ The project was originally built with Flask + SQLite and later upgraded to FastA
 
 ## 🏗️ Architecture
 
-text
+```text
 Frontend
    ↓
 FastAPI
@@ -38,27 +45,32 @@ CRUD
 SQLAlchemy
    ↓
 PostgreSQL
-`
+````
 
 ## 📁 Project Structure
 
-text
+```text
 task-manager-api/
 │
-├── main.py
-├── database.py
-├── models.py
-├── schemas.py
-├── curd.py
-├── init_db.py
+├── backend/
+│   ├── main.py
+│   ├── database.py
+│   ├── models.py
+│   ├── schemas.py
+│   ├── curd.py
+│   └── init_db.py
 │
 ├── frontend/
 │   └── index.html
 │
 ├── requirements.txt
+├── Procfile
 ├── .gitignore
-└── README.md
+├── README.md
+└── .env
+```
 
+> `.env` is kept locally and is not uploaded to GitHub.
 
 ## 🔌 API Endpoints
 
@@ -71,61 +83,65 @@ task-manager-api/
 
 ### Create Task
 
-json
+```json
 {
     "task": "Learn PostgreSQL"
 }
-
+```
 
 If no status is provided, it defaults to `pending`.
 
 ### Update / Complete Task
 
-json
+```json
 {
     "task": "Learn FastAPI",
     "status": "Completed"
 }
-
+```
 
 ## 🗄️ Database
 
 The application uses **PostgreSQL** with **SQLAlchemy ORM**.
 
-The database URL is loaded through an environment variable:
+The database URL is provided through the environment variable:
 
-env
+```env
 DATABASE_URL=your_database_url
-
-
-The `.env` file is excluded from GitHub.
+```
 
 ## 💻 Run Locally
 
-bash
+```bash
 git clone <your-repository-url>
 cd task-manager-api
-pip install -r requirements.txt
-uvicorn main:app --reload
 
+pip install -r requirements.txt
+
+uvicorn backend.main:app --reload
+```
 
 API:
-http://127.0.0.1:8000
 
+```text
+http://127.0.0.1:8000
+```
 
 Swagger documentation:
-http://127.0.0.1:8000/docs
 
+```text
+https://task-manager-api-1-xy2g.onrender.com/docs
+```
 
 ## 📸 Screenshots
 
 ### Task Manager
 
-*Add screenshot here*
+![Task Manager](screenshots/frontend.png)
 
 ### API Documentation
 
-*Add screenshot here*
+![FastAPI Swagger](screenshots/swagger.png)
 
 ## 🔄 Project Upgrade
 
@@ -142,4 +158,8 @@ http://127.0.0.1:8000/docs
 **Sabir Ahmed**
 
 BCA Student | Backend Developer
+
+
+
+
 
