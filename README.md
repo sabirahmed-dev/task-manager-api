@@ -1,85 +1,145 @@
-Task Manager CRUD API
+# 🚀 Task Manager API
 
-A simple REST API built with Flask and SQLite that allows users to create, read, update, and delete tasks.
+A full-stack task management application built with **FastAPI, PostgreSQL, SQLAlchemy, Pydantic, HTML, CSS, and JavaScript**.
+
+The project was originally built with Flask + SQLite and later upgraded to FastAPI + PostgreSQL.
+
+## ✨ Features
+
+- Create tasks
+- View tasks
+- Edit tasks
+- Complete tasks
+- Delete tasks
+- PostgreSQL database
+- SQLAlchemy ORM
+- Pydantic validation
+- CORS
+- Responsive frontend
+- Environment variables
+
+## 🛠️ Tech Stack
+
+**Backend:** Python, FastAPI, SQLAlchemy, Pydantic, PostgreSQL
+
+**Frontend:** HTML, CSS, JavaScript
+
+**Deployment:** GitHub, Render
+
+## 🏗️ Architecture
+
+text
+Frontend
+   ↓
+FastAPI
+   ↓
+CRUD
+   ↓
+SQLAlchemy
+   ↓
+PostgreSQL
+`
+
+## 📁 Project Structure
+
+text
+task-manager-api/
+│
+├── main.py
+├── database.py
+├── models.py
+├── schemas.py
+├── curd.py
+├── init_db.py
+│
+├── frontend/
+│   └── index.html
+│
+├── requirements.txt
+├── .gitignore
+└── README.md
 
 
-## Live Demo
+## 🔌 API Endpoints
 
-https://task-manager-api-m0e7.onrender.com
+| Method | Endpoint      | Description   |
+| ------ | ------------- | ------------- |
+| GET    | `/`           | Get all tasks |
+| POST   | `/tasks`      | Create a task |
+| PUT    | `/tasks/{id}` | Update a task |
+| DELETE | `/tasks/{id}` | Delete a task |
 
-Features
+### Create Task
 
-* Create a new task
-* View all tasks
-* Update an existing task
-* Delete a task
-* SQLite database integration
-* RESTful API design
-* Deployable with Gunicorn and Render
-
-Tech Stack
-
-* Python
-* Flask
-* SQLite
-* Gunicorn
-* Render
-
-API Endpoints
-
-Get All Tasks
-
-GET /tasks
-
-Create Task
-
-POST /tasks
-
-Request Body:
-
+json
 {
-    "task": "Learn Flask"
+    "task": "Learn PostgreSQL"
 }
 
-Update Task
 
-PUT /tasks/<id>
+If no status is provided, it defaults to `pending`.
 
-Request Body:
+### Update / Complete Task
 
+json
 {
-    "task": "Learn Flask API",
-    "status": "completed"
+    "task": "Learn FastAPI",
+    "status": "Completed"
 }
 
-Delete Task
 
-DELETE /tasks/<id>
+## 🗄️ Database
 
-Installation
+The application uses **PostgreSQL** with **SQLAlchemy ORM**.
 
-Clone the repository:
+The database URL is loaded through an environment variable:
 
+env
+DATABASE_URL=your_database_url
+
+
+The `.env` file is excluded from GitHub.
+
+## 💻 Run Locally
+
+bash
 git clone <your-repository-url>
 cd task-manager-api
-
-Install dependencies:
-
 pip install -r requirements.txt
+uvicorn main:app --reload
 
-Run the application:
 
-python app.py
+API:
+http://127.0.0.1:8000
 
-Deployment
 
-This project can be deployed on Render using Gunicorn.
+Swagger documentation:
+http://127.0.0.1:8000/docs
 
-Start Command:
 
-gunicorn app:app
+## 📸 Screenshots
 
-Author
+### Task Manager
 
-Sabir Ahmed
-BCA Student | Backend Developer Learning Journey
+*Add screenshot here*
+
+### API Documentation
+
+*Add screenshot here*
+
+## 🔄 Project Upgrade
+
+**Before:**
+
+`Flask + SQLite`
+
+**Now:**
+
+`FastAPI + PostgreSQL + SQLAlchemy + Pydantic`
+
+## 👨‍💻 Author
+
+**Sabir Ahmed**
+
+BCA Student | Backend Developer
+

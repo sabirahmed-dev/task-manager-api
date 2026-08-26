@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Task Manager</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at top left, #243b70, transparent 35%),
+                radial-gradient(circle at bottom right, #3b1d5a, transparent 35%),
+                #0b1020;
+            color: white;
+            padding: 50px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            margin: auto;
+        }
+
+        /* HEADER */
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            color: #9ca8c7;
+            font-size: 16px;
+        }
+
+        /* INPUT AREA */
+
+        .input-box {
+            display: flex;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 25px;
+        }
+
+        #taskInput {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 14px 16px;
+            border-radius: 10px;
+            background: #151d33;
+            color: white;
+            font-size: 16px;
+        }
+
+        #taskInput::placeholder {
+            color: #73809f;
+        }
+
+        #addButton {
+            border: none;
+            padding: 0 24px;
+            border-radius: 10px;
+            background: #6366f1;
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        #addButton:hover {
+            background: #818cf8;
+            transform: translateY(-1px);
+        }
+
+        /* TASK HEADER */
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .task-header h2 {
+            font-size: 20px;
+        }
+
+        #taskCount {
+            color: #8b97b5;
+            font-size: 14px;
+        }
+
+        /* TASK LIST */
+
+        #taskList {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            padding: 18px;
+
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 14px;
+
+            backdrop-filter: blur(10px);
+
+            transition: 0.2s;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(129, 140, 248, 0.4);
+        }
+
+        .task-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .task-name {
+            font-size: 17px;
+            font-weight: 500;
+            margin-bottom: 7px;
+            word-break: break-word;
+        }
+
+        /* STATUS */
+
+        .status {
+            display: inline-block;
+            font-size: 12px;
+            padding: 4px 9px;
+            border-radius: 20px;
+            background: #302b16;
+            color: #facc15;
+        }
+
+        .status.completed {
+            background: #123324;
+            color: #4ade80;
+        }
+
+        /* BUTTONS */
+
+        .actions {
+            display: flex;
+            gap: 7px;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .edit-btn {
+            background: #334155;
+        }
+
+        .edit-btn:hover {
+            background: #475569;
+        }
+
+        .complete-btn {
+            background: #166534;
+        }
+
+        .complete-btn:hover {
+            background: #15803d;
+        }
+
+        .delete-btn {
+            background: #7f1d1d;
+        }
+
+        .delete-btn:hover {
+            background: #991b1b;
+        }
+
+        /* EMPTY STATE */
+
+        .empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #6f7b99;
+            border: 1px dashed #303a55;
+            border-radius: 14px;
+        }
+
+        .empty-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 30px 15px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .input-box {
+                flex-direction: column;
+            }
+
+            #addButton {
+                padding: 13px;
+            }
+
+            .task-card {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .actions {
+                width: 100%;
+            }
+
+            .action-btn {
+                flex: 1;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <h1>Task Manager</h1>
+            <p>Organize your work. Get things done.</p>
+        </div>
+
+
+        <div class="input-box">
+
+            <input
+                type="text"
+                id="taskInput"
+                placeholder="What needs to be done?"
+            >
+
+            <button id="addButton" onclick="add_Task()">
+                + Add Task
+            </button>
+
+        </div>
+
+
+        <div class="task-header">
+
+            <h2>Your Tasks</h2>
+
+            <span id="taskCount">
+                0 tasks
+            </span>
+
+        </div>
+
+
+        <ul id="taskList"></ul>
+
+    </div>
+
+
+    <script>
+
+        const API = "http://127.0.0.1:8000";
+
+
+        // CREATE TASK
+
+        async function add_Task() {
+
+            const value = document
+                .getElementById("taskInput")
+                .value
+                .trim();
+
+            if (value == "") {
+                return;
+            }
+
+            await fetch(API + "/tasks", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    task: value
+                })
+
+            });
+
+            document.getElementById("taskInput").value = "";
+
+            await loadTasks();
+        }
+
+
+        // GET ALL TASKS
+
+        async function loadTasks() {
+
+            const res = await fetch(API);
+
+            const data = await res.json();
+
+            const list = document.getElementById("taskList");
+
+            list.innerHTML = "";
+
+            document.getElementById("taskCount").textContent =
+                `${data.length} ${data.length === 1 ? "task" : "tasks"}`;
+
+
+            // EMPTY STATE
+
+            if (data.length === 0) {
+
+                const empty = document.createElement("div");
+
+                empty.className = "empty";
+
+                empty.innerHTML = `
+                    <div class="empty-icon">✓</div>
+                    <p>No tasks yet</p>
+                    <small>Add your first task above.</small>
+                `;
+
+                list.appendChild(empty);
+
+                return;
+            }
+
+
+            // CREATE TASK CARDS
+
+            data.forEach(task => {
+
+                const li = document.createElement("li");
+
+                li.className = "task-card";
+
+
+                // TASK INFO
+
+                const taskInfo = document.createElement("div");
+
+                taskInfo.className = "task-info";
+
+
+                const taskName = document.createElement("div");
+
+                taskName.className = "task-name";
+
+                taskName.textContent = task.task;
+
+
+                const status = document.createElement("span");
+
+                status.className = "status";
+
+
+                if (task.status === "Completed") {
+
+                    status.classList.add("completed");
+
+                    status.textContent = "✓ Completed";
+
+                } else {
+
+                    status.textContent = "● Pending";
+
+                }
+
+
+                taskInfo.appendChild(taskName);
+
+                taskInfo.appendChild(status);
+
+
+                // ACTIONS
+
+                const actions = document.createElement("div");
+
+                actions.className = "actions";
+
+
+                // EDIT
+
+                const editBtn = document.createElement("button");
+
+                editBtn.className = "action-btn edit-btn";
+
+                editBtn.textContent = "Edit";
+
+
+                editBtn.addEventListener("click", async function () {
+
+                    const newTask = prompt(
+                        "Enter new task",
+                        task.task
+                    );
+
+                    if (newTask == null || newTask.trim() == "") {
+                        return;
+                    }
+
+
+                    await fetch(`${API}/tasks/${task.id}`, {
+
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            task: newTask.trim(),
+                            status: task.status
+                        })
+
+                    });
+
+                    await loadTasks();
+
+                });
+
+
+                // COMPLETE
+
+                const completeBtn = document.createElement("button");
+
+                completeBtn.className = "action-btn complete-btn";
+
+                completeBtn.textContent =
+                    task.status === "Completed"
+                        ? "Done"
+                        : "Complete";
+
+
+                completeBtn.disabled =
+                    task.status === "Completed";
+
+
+                if (task.status === "Completed") {
+                    completeBtn.style.opacity = "0.5";
+                    completeBtn.style.cursor = "default";
+                }
+
+
+                completeBtn.addEventListener("click", async function () {
+
+                    await fetch(`${API}/tasks/${task.id}`, {
+
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            task: task.task,
+                            status: "Completed"
+                        })
+
+                    });
+
+                    await loadTasks();
+
+                });
+
+
+                // DELETE
+
+                const deleteBtn = document.createElement("button");
+
+                deleteBtn.className = "action-btn delete-btn";
+
+                deleteBtn.textContent = "Delete";
+
+
+                deleteBtn.addEventListener("click", async function () {
+
+                    await fetch(`${API}/tasks/${task.id}`, {
+
+                        method: "DELETE"
+
+                    });
+
+                    await loadTasks();
+
+                });
+
+
+                actions.appendChild(editBtn);
+
+                actions.appendChild(completeBtn);
+
+                actions.appendChild(deleteBtn);
+
+
+                li.appendChild(taskInfo);
+
+                li.appendChild(actions);
+
+
+                list.appendChild(li);
+
+            });
+
+        }
+
+
+        // LOAD TASKS WHEN PAGE OPENS
+
+        loadTasks();
+
+
+        // ENTER KEY = ADD TASK
+
+        document
+            .getElementById("taskInput")
+            .addEventListener("keydown", function (event) {
+
+                if (event.key === "Enter") {
+                    add_Task();
+                }
+
+            });
+
+    </script>
+
+</body>
+
+</html>
