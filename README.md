@@ -54,6 +54,7 @@ CRUD
 SQLAlchemy
    ↓
 PostgreSQL
+
 ````
 
 ## 📁 Project Structure
@@ -189,11 +190,6 @@ BCA Student | Backend Developer
 
 Now **only run these commands**:
 
-```bash
-git add README.md
-git commit -m "finalize README"
-git push
-````
 
 That's it.
 
