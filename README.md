@@ -1,3 +1,4 @@
+Got it — you want the **whole README as one medium-sized copy-paste text block**, not a shortened version.
 # 🚀 Task Manager API
 
 A full-stack task management application built with **FastAPI, PostgreSQL, SQLAlchemy, Pydantic, HTML, CSS, and JavaScript**.
@@ -14,6 +15,10 @@ https://task-manager-api-1-xy2g.onrender.com/docs
 
 ## ✨ Features
 
+- User registration
+- User login
+- JWT authentication
+- Protected task routes
 - Create tasks
 - View tasks
 - Update tasks
@@ -28,7 +33,7 @@ https://task-manager-api-1-xy2g.onrender.com/docs
 
 ## 🛠️ Tech Stack
 
-**Backend:** Python, FastAPI, SQLAlchemy, Pydantic, PostgreSQL
+**Backend:** Python, FastAPI, SQLAlchemy, Pydantic, PostgreSQL, JWT, Passlib, bcrypt
 
 **Frontend:** HTML, CSS, JavaScript
 
@@ -36,23 +41,26 @@ https://task-manager-api-1-xy2g.onrender.com/docs
 
 ## 🏗️ Architecture
 
-```text
+
 Frontend
+   ↓
+Login / Register
+   ↓
+JWT Authentication
    ↓
 FastAPI
    ↓
-CRUD
+Protected CRUD
    ↓
 SQLAlchemy
    ↓
 PostgreSQL
-```
 
 ## 📁 Project Structure
 
-```text
+
 task-manager-api/
-│
+
 ├── backend/
 │   ├── main.py
 │   ├── database.py
@@ -66,41 +74,87 @@ task-manager-api/
 │
 ├── screenshots/
 │   ├── frontend.png
+│   ├── login.png
+│   ├── register.png
 │   └── swagger.png
 │
 ├── .gitignore
 ├── Procfile
 ├── README.md
 └── requirements.txt
-```
+
 
 > `.env` contains environment variables and is kept locally. It is not committed to GitHub.
 
 ## 🔌 API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | Get all tasks |
-| POST | `/tasks` | Create a task |
-| PUT | `/tasks/{id}` | Update a task |
-| DELETE | `/tasks/{id}` | Delete a task |
+| Method | Endpoint      | Description                 |
+| ------ | ------------- | --------------------------- |
+| POST   | `/register`   | Register a new user         |
+| POST   | `/login`      | Login and receive JWT token |
+| GET    | `/`           | Get all tasks               |
+| POST   | `/tasks`      | Create a task               |
+| PUT    | `/tasks/{id}` | Update a task               |
+| DELETE | `/tasks/{id}` | Delete a task               |
+
+### Register
+
+{
+  "email": "example@gmail.com",
+  "password": "your_password"
+}
+
+
+### Login
+
+{
+  "email": "example@gmail.com",
+  "password": "your_password"
+}
+
+
+Successful login returns a JWT token which is required for protected task routes.
 
 ### Create Task
 
-```json
+
 {
   "task": "Learn FastAPI"
 }
-```
+
 
 ### Update Task
 
-```json
+
 {
   "task": "Learn FastAPI",
   "status": "Completed"
 }
-```
+
+
+## 🔐 Authentication
+
+The application uses **JWT authentication** to protect task management routes.
+
+* Users can register and log in.
+* Passwords are hashed using Passlib and bcrypt.
+* Login generates a JWT token.
+* The frontend stores the token and sends it with protected requests.
+* FastAPI verifies the JWT before allowing access to protected routes.
+
+
+Register
+   ↓
+Login
+   ↓
+JWT Token
+   ↓
+Authorization: Bearer <token>
+   ↓
+JWT Verification
+   ↓
+Protected Task API
+
 
 ## 🗄️ Database
 
@@ -108,48 +162,50 @@ The application uses **PostgreSQL** with **SQLAlchemy ORM**.
 
 The database connection is provided through an environment variable:
 
-```env
+
 DATABASE_URL=your_database_url
-```
+
 
 ## 💻 Run Locally
 
 Clone the repository:
 
-```bash
+
 git clone https://github.com/sabirahmed-dev/task-manager-api.git
 cd task-manager-api
-```
 
 Install dependencies:
 
-```bash
 pip install -r requirements.txt
-```
 
 Run the API:
 
-```bash
 uvicorn backend.main:app --reload
-```
 
 Local API:
 
-```text
+
 http://127.0.0.1:8000
-```
+
 
 Local Swagger:
 
-```text
 http://127.0.0.1:8000/docs
-```
+
 
 ## 📸 Screenshots
 
 ### Task Manager
 
 ![Task Manager](screenshots/frontend.png)
+
+### Login
+
+![Login](screenshots/login.png)
+
+### Register
+
+![Register](screenshots/register.png)
 
 ### FastAPI Swagger
 
@@ -159,21 +215,22 @@ http://127.0.0.1:8000/docs
 
 ### Before
 
-```text
+
 Flask + SQLite
-```
+
 
 ### Now
 
-```text
-FastAPI + PostgreSQL + SQLAlchemy + Pydantic
-```
+
+FastAPI + PostgreSQL + SQLAlchemy + Pydantic + JWT Authentication
+
 
 ## 👨‍💻 Author
 
 **Sabir Ahmed**
 
 BCA Student | Backend Developer
+
 
 
 
