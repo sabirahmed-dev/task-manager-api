@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from backend.models import Task
-from backend.schemas import TaskCreate
+from backend.models.models import Task
+from backend.schemas.schemas import TaskCreate
 
 
 def post_task(task_data :TaskCreate,db :Session):

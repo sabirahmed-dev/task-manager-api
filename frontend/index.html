@@ -263,16 +263,97 @@
         }
 
     </style>
+
+<style>
+.auth-box {
+    max-width: 430px;
+    margin: 40px auto;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+}
+.auth-box h2 { margin-bottom: 20px; text-align: center; }
+.auth-box input {
+    width: 100%;
+    margin-bottom: 12px;
+    border: none;
+    outline: none;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: #151d33;
+    color: white;
+    font-size: 16px;
+}
+.auth-box #authButton {
+    width: 100%;
+    border: none;
+    padding: 13px;
+    border-radius: 10px;
+    background: #6366f1;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+.switch-auth {
+    width: 100%;
+    margin-top: 15px;
+    border: none;
+    background: transparent;
+    color: #a5b4fc;
+    cursor: pointer;
+}
+#authMessage {
+    min-height: 20px;
+    margin-top: 14px;
+    text-align: center;
+}
+.logout-btn {
+    margin-top: 15px;
+    border: 1px solid rgba(255,255,255,.12);
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: rgba(255,255,255,.06);
+    color: white;
+    cursor: pointer;
+}
+</style>
+
 </head>
 
 
 <body>
+
+<div id="authScreen">
+    <div class="header">
+        <h1>Task Manager</h1>
+        <p id="authSubtitle">Login to manage your tasks.</p>
+    </div>
+
+    <div class="auth-box">
+        <h2 id="authTitle">Login</h2>
+
+        <input type="email" id="emailInput" placeholder="Email">
+        <input type="password" id="passwordInput" placeholder="Password">
+
+        <button id="authButton" onclick="loginUser()">Login</button>
+
+        <p id="authMessage"></p>
+
+        <button id="switchAuthButton" class="switch-auth" onclick="switchAuthMode()">
+            Don't have an account? Register
+        </button>
+    </div>
+</div>
+
+<div id="taskScreen" style="display:none;">
 
     <div class="container">
 
         <div class="header">
             <h1>Task Manager</h1>
             <p>Organize your work. Get things done.</p>
+                <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
 
 
@@ -307,52 +388,172 @@
     </div>
 
 
+</div>
+
     <script>
+        const API = "http://127.0.0.1:8000";
+        let registerMode = false;
 
-        const API = "https://task-manager-api-1-xy2g.onrender.com";
+        function switchAuthMode() {
+            registerMode = !registerMode;
 
+            document.getElementById("authTitle").textContent =
+                registerMode ? "Register" : "Login";
 
-        // CREATE TASK
+            document.getElementById("authSubtitle").textContent =
+                registerMode
+                    ? "Create your Task Manager account."
+                    : "Login to manage your tasks.";
 
-        async function add_Task() {
+            document.getElementById("authButton").textContent =
+                registerMode ? "Register" : "Login";
 
-            const value = document
-                .getElementById("taskInput")
-                .value
-                .trim();
+            document.getElementById("authButton").onclick =
+                registerMode ? registerUser : loginUser;
 
-            if (value == "") {
+            document.getElementById("switchAuthButton").textContent =
+                registerMode
+                    ? "Already have an account? Login"
+                    : "Don't have an account? Register";
+
+            document.getElementById("authMessage").textContent = "";
+        }
+
+        async function registerUser() {
+            const email = document.getElementById("emailInput").value.trim();
+            const password = document.getElementById("passwordInput").value;
+            const message = document.getElementById("authMessage");
+
+            if (!email || !password) {
+                message.textContent = "Enter email and password.";
                 return;
             }
 
-            await fetch(API + "/tasks", {
+            try {
+                const res = await fetch(API + "/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
 
+                const data = await res.json();
+
+                if (!res.ok) {
+                    message.textContent = data.detail || "Registration failed.";
+                    return;
+                }
+
+                message.textContent = "Registration successful. Please login.";
+                switchAuthMode();
+                document.getElementById("passwordInput").value = "";
+
+            } catch (error) {
+                message.textContent = "Could not connect to the server.";
+                console.error(error);
+            }
+        }
+
+        async function loginUser() {
+            const email = document.getElementById("emailInput").value.trim();
+            const password = document.getElementById("passwordInput").value;
+            const message = document.getElementById("authMessage");
+
+            if (!email || !password) {
+                message.textContent = "Enter email and password.";
+                return;
+            }
+
+            try {
+                const res = await fetch(API + "/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const token = await res.json();
+
+                if (!res.ok) {
+                    message.textContent =
+                        typeof token === "object"
+                            ? (token.detail || "Login failed.")
+                            : "Login failed.";
+                    return;
+                }
+
+                localStorage.setItem("token", token);
+
+                document.getElementById("authMessage").textContent = "";
+                document.getElementById("emailInput").value = "";
+                document.getElementById("passwordInput").value = "";
+
+                showTaskScreen();
+
+            } catch (error) {
+                message.textContent = "Could not connect to the server.";
+                console.error(error);
+            }
+        }
+
+        function getToken() {
+            return localStorage.getItem("token");
+        }
+
+        function authHeaders(includeContentType = true) {
+            const headers = {
+                "Authorization": `Bearer ${getToken()}`
+            };
+
+            if (includeContentType) {
+                headers["Content-Type"] = "application/json";
+            }
+
+            return headers;
+        }
+
+        function showTaskScreen() {
+            document.getElementById("authScreen").style.display = "none";
+            document.getElementById("taskScreen").style.display = "block";
+            loadTasks();
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            document.getElementById("taskScreen").style.display = "none";
+            document.getElementById("authScreen").style.display = "block";
+            document.getElementById("authMessage").textContent = "Logged out.";
+        }
+
+        async function add_Task() {
+            const value = document.getElementById("taskInput").value.trim();
+
+            if (value === "") return;
+
+            const res = await fetch(API + "/tasks", {
                 method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    task: value
-                })
-
+                headers: authHeaders(),
+                body: JSON.stringify({ task: value })
             });
 
-            document.getElementById("taskInput").value = "";
+            if (res.status === 401) {
+                logout();
+                return;
+            }
 
+            document.getElementById("taskInput").value = "";
             await loadTasks();
         }
 
-
-        // GET ALL TASKS
-
         async function loadTasks() {
+            const res = await fetch(API, {
+                headers: authHeaders(false)
+            });
 
-            const res = await fetch(API);
+            if (res.status === 401) {
+                logout();
+                return;
+            }
 
             const data = await res.json();
-
             const list = document.getElementById("taskList");
 
             list.innerHTML = "";
@@ -360,223 +561,139 @@
             document.getElementById("taskCount").textContent =
                 `${data.length} ${data.length === 1 ? "task" : "tasks"}`;
 
-
-            // EMPTY STATE
-
             if (data.length === 0) {
-
                 const empty = document.createElement("div");
-
                 empty.className = "empty";
-
                 empty.innerHTML = `
                     <div class="empty-icon">✓</div>
                     <p>No tasks yet</p>
                     <small>Add your first task above.</small>
                 `;
-
                 list.appendChild(empty);
-
                 return;
             }
 
-
-            // CREATE TASK CARDS
-
             data.forEach(task => {
-
                 const li = document.createElement("li");
-
                 li.className = "task-card";
 
-
-                // TASK INFO
-
                 const taskInfo = document.createElement("div");
-
                 taskInfo.className = "task-info";
 
-
                 const taskName = document.createElement("div");
-
                 taskName.className = "task-name";
-
                 taskName.textContent = task.task;
 
-
                 const status = document.createElement("span");
-
                 status.className = "status";
 
-
                 if (task.status === "Completed") {
-
                     status.classList.add("completed");
-
                     status.textContent = "✓ Completed";
-
                 } else {
-
                     status.textContent = "● Pending";
-
                 }
 
-
                 taskInfo.appendChild(taskName);
-
                 taskInfo.appendChild(status);
 
-
-                // ACTIONS
-
                 const actions = document.createElement("div");
-
                 actions.className = "actions";
 
-
-                // EDIT
-
                 const editBtn = document.createElement("button");
-
                 editBtn.className = "action-btn edit-btn";
-
                 editBtn.textContent = "Edit";
 
-
                 editBtn.addEventListener("click", async function () {
+                    const newTask = prompt("Enter new task", task.task);
 
-                    const newTask = prompt(
-                        "Enter new task",
-                        task.task
-                    );
+                    if (newTask == null || newTask.trim() === "") return;
 
-                    if (newTask == null || newTask.trim() == "") {
-                        return;
-                    }
-
-
-                    await fetch(`${API}/tasks/${task.id}`, {
-
+                    const res = await fetch(`${API}/tasks/${task.id}`, {
                         method: "PUT",
-
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-
+                        headers: authHeaders(),
                         body: JSON.stringify({
                             task: newTask.trim(),
                             status: task.status
                         })
-
                     });
 
-                    await loadTasks();
+                    if (res.status === 401) {
+                        logout();
+                        return;
+                    }
 
+                    await loadTasks();
                 });
 
-
-                // COMPLETE
-
                 const completeBtn = document.createElement("button");
-
                 completeBtn.className = "action-btn complete-btn";
-
                 completeBtn.textContent =
-                    task.status === "Completed"
-                        ? "Done"
-                        : "Complete";
-
-
-                completeBtn.disabled =
-                    task.status === "Completed";
-
+                    task.status === "Completed" ? "Done" : "Complete";
+                completeBtn.disabled = task.status === "Completed";
 
                 if (task.status === "Completed") {
                     completeBtn.style.opacity = "0.5";
                     completeBtn.style.cursor = "default";
                 }
 
-
                 completeBtn.addEventListener("click", async function () {
-
-                    await fetch(`${API}/tasks/${task.id}`, {
-
+                    const res = await fetch(`${API}/tasks/${task.id}`, {
                         method: "PUT",
-
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-
+                        headers: authHeaders(),
                         body: JSON.stringify({
                             task: task.task,
                             status: "Completed"
                         })
-
                     });
 
+                    if (res.status === 401) {
+                        logout();
+                        return;
+                    }
+
                     await loadTasks();
-
                 });
-
-
-                // DELETE
 
                 const deleteBtn = document.createElement("button");
-
                 deleteBtn.className = "action-btn delete-btn";
-
                 deleteBtn.textContent = "Delete";
 
-
                 deleteBtn.addEventListener("click", async function () {
-
-                    await fetch(`${API}/tasks/${task.id}`, {
-
-                        method: "DELETE"
-
+                    const res = await fetch(`${API}/tasks/${task.id}`, {
+                        method: "DELETE",
+                        headers: authHeaders(false)
                     });
 
-                    await loadTasks();
+                    if (res.status === 401) {
+                        logout();
+                        return;
+                    }
 
+                    await loadTasks();
                 });
 
-
                 actions.appendChild(editBtn);
-
                 actions.appendChild(completeBtn);
-
                 actions.appendChild(deleteBtn);
 
-
                 li.appendChild(taskInfo);
-
                 li.appendChild(actions);
-
-
                 list.appendChild(li);
-
             });
-
         }
 
-
-        // LOAD TASKS WHEN PAGE OPENS
-
-        loadTasks();
-
-
-        // ENTER KEY = ADD TASK
+        if (getToken()) {
+            showTaskScreen();
+        }
 
         document
             .getElementById("taskInput")
             .addEventListener("keydown", function (event) {
-
                 if (event.key === "Enter") {
                     add_Task();
                 }
-
             });
-
     </script>
 
 </body>
