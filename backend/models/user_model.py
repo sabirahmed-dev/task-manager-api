@@ -5,5 +5,5 @@ class User(Base):
     __tablename__ ="Users"
 
     id = Column(Integer,primary_key=True)
-    email = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
     password = Column(String(266) ,nullable=False)

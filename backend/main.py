@@ -8,9 +8,15 @@ from backend.database import get_db
 from backend.schemas.schemas import TaskCreate
 from backend.schemas.user_schema import userCreate
 import backend.routes.curd as curd
-import backend.routes.auth as auth 
+import backend.routes.auth as auth
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
+
+logger.info("Task manager API started")
 
 app.add_middleware(
     CORSMiddleware,

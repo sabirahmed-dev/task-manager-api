@@ -1,197 +1,87 @@
-Got it — you want the **whole README as one medium-sized copy-paste text block**, not a shortened version.
+Yes — your original README had four images:
+
+* `screenshots/frontend.png`
+* `screenshots/login.png`
+* `screenshots/register.png`
+* `screenshots/swagger.png`
+
+Let's keep them in the **medium-sized README** instead of removing them. Put this version into `README.md`:
+
+````markdown
 # 🚀 Task Manager API
 
 A full-stack task management application built with **FastAPI, PostgreSQL, SQLAlchemy, Pydantic, HTML, CSS, and JavaScript**.
 
-The project was originally built with Flask + SQLite and later upgraded to FastAPI + PostgreSQL.
+Originally built with **Flask + SQLite**, then upgraded to **FastAPI, PostgreSQL, JWT authentication, logging, and Docker**.
 
 ## 🌐 Live Demo
 
-**Live API:**  
+**API:**
 https://task-manager-api-1-xy2g.onrender.com
 
-**Swagger Docs:**  
+**Swagger:**
 https://task-manager-api-1-xy2g.onrender.com/docs
 
 ## ✨ Features
 
-- User registration
-- User login
+- User registration and login
 - JWT authentication
-- Protected task routes
-- Create tasks
-- View tasks
-- Update tasks
-- Complete tasks
-- Delete tasks
-- PostgreSQL database
-- SQLAlchemy ORM
+- Protected task CRUD operations
+- Password hashing with Passlib and bcrypt
+- PostgreSQL + SQLAlchemy ORM
 - Pydantic validation
-- CORS support
+- Error handling and logging
+- Environment variables
+- Docker and Docker Compose
 - Responsive frontend
-- Cloud deployment
+- Render deployment
 
 ## 🛠️ Tech Stack
 
-**Backend:** Python, FastAPI, SQLAlchemy, Pydantic, PostgreSQL, JWT, Passlib, bcrypt
+**Backend:** Python, FastAPI, SQLAlchemy, PostgreSQL, Pydantic, JWT
 
 **Frontend:** HTML, CSS, JavaScript
+
+**DevOps:** Docker, Docker Compose
 
 **Deployment:** GitHub, Render
 
 ## 🏗️ Architecture
 
-
+```text
 Frontend
-   ↓
-Login / Register
    ↓
 JWT Authentication
    ↓
 FastAPI
    ↓
-Protected CRUD
-   ↓
 SQLAlchemy
    ↓
 PostgreSQL
+````
 
-## 📁 Project Structure
+### Docker Compose
 
-
-task-manager-api/
-
-├── backend/
-│   ├── main.py
-│   ├── database.py
-│   ├── models.py
-│   ├── schemas.py
-│   ├── curd.py
-│   └── init_db.py
-│
-├── frontend/
-│   └── index.html
-│
-├── screenshots/
-│   ├── frontend.png
-│   ├── login.png
-│   ├── register.png
-│   └── swagger.png
-│
-├── .gitignore
-├── Procfile
-├── README.md
-└── requirements.txt
-
-
-> `.env` contains environment variables and is kept locally. It is not committed to GitHub.
+```text
+FastAPI Container
+       ↓
+Docker Network
+       ↓
+PostgreSQL Container
+       ↓
+Persistent Volume
+```
 
 ## 🔌 API Endpoints
 
-| Method | Endpoint      | Description                 |
-| ------ | ------------- | --------------------------- |
-| POST   | `/register`   | Register a new user         |
-| POST   | `/login`      | Login and receive JWT token |
-| GET    | `/`           | Get all tasks               |
-| POST   | `/tasks`      | Create a task               |
-| PUT    | `/tasks/{id}` | Update a task               |
-| DELETE | `/tasks/{id}` | Delete a task               |
-
-### Register
-
-{
-  "email": "example@gmail.com",
-  "password": "your_password"
-}
-
-
-### Login
-
-{
-  "email": "example@gmail.com",
-  "password": "your_password"
-}
-
-
-Successful login returns a JWT token which is required for protected task routes.
-
-### Create Task
-
-
-{
-  "task": "Learn FastAPI"
-}
-
-
-### Update Task
-
-
-{
-  "task": "Learn FastAPI",
-  "status": "Completed"
-}
-
-
-## 🔐 Authentication
-
-The application uses **JWT authentication** to protect task management routes.
-
-* Users can register and log in.
-* Passwords are hashed using Passlib and bcrypt.
-* Login generates a JWT token.
-* The frontend stores the token and sends it with protected requests.
-* FastAPI verifies the JWT before allowing access to protected routes.
-
-
-Register
-   ↓
-Login
-   ↓
-JWT Token
-   ↓
-Authorization: Bearer <token>
-   ↓
-JWT Verification
-   ↓
-Protected Task API
-
-
-## 🗄️ Database
-
-The application uses **PostgreSQL** with **SQLAlchemy ORM**.
-
-The database connection is provided through an environment variable:
-
-
-DATABASE_URL=your_database_url
-
-
-## 💻 Run Locally
-
-Clone the repository:
-
-
-git clone https://github.com/sabirahmed-dev/task-manager-api.git
-cd task-manager-api
-
-Install dependencies:
-
-pip install -r requirements.txt
-
-Run the API:
-
-uvicorn backend.main:app --reload
-
-Local API:
-
-
-http://127.0.0.1:8000
-
-
-Local Swagger:
-
-http://127.0.0.1:8000/docs
-
+| Method | Endpoint      | Description           |
+| ------ | ------------- | --------------------- |
+| POST   | `/register`   | Register user         |
+| POST   | `/login`      | Login and receive JWT |
+| GET    | `/`           | Get tasks             |
+| POST   | `/tasks`      | Create task           |
+| PUT    | `/tasks/{id}` | Update task           |
+| DELETE | `/tasks/{id}` | Delete task           |
 
 ## 📸 Screenshots
 
@@ -207,38 +97,58 @@ http://127.0.0.1:8000/docs
 
 ![Register](screenshots/register.png)
 
-### FastAPI Swagger
+### Swagger
 
-![FastAPI Swagger](screenshots/swagger.png)
+![Swagger](screenshots/swagger.png)
+
+## 🐳 Run with Docker
+
+```bash
+docker compose up --build
+```
+
+API:
+
+```text
+http://localhost:8000
+```
+
+Swagger:
+
+```text
+http://localhost:8000/docs
+```
+
+`.env` contains local environment variables and secrets and is not committed to GitHub.
+
+**## 📸 Screenshots**
+
+**### Task Manager**
+
+![Task Manager]\(screenshots/frontend.png)
+
+**### Login**
+
+![Login]\(screenshots/login.png)
+
+**### Register**
+
+![Register]\(screenshots/register.png)
+
+**### FastAPI Swagger**
+
+![FastAPI Swagger]\(screenshots/swagger.png)
 
 ## 🔄 Project Upgrade
 
-### Before
+**Before:** Flask + SQLite
 
-
-Flask + SQLite
-
-
-### Now
-
-
-FastAPI + PostgreSQL + SQLAlchemy + Pydantic + JWT Authentication
-
+**Now:** FastAPI + PostgreSQL + SQLAlchemy + Pydantic + JWT + Logging + Docker
 
 ## 👨‍💻 Author
 
 **Sabir Ahmed**
 
 BCA Student | Backend Developer
-
-
-
-
-
-
-
-
-
-
 
 
