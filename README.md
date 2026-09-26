@@ -1,13 +1,3 @@
-Yes — your original README had four images:
-
-* `screenshots/frontend.png`
-* `screenshots/login.png`
-* `screenshots/register.png`
-* `screenshots/swagger.png`
-
-Let's keep them in the **medium-sized README** instead of removing them. Put this version into `README.md`:
-
-````markdown
 # 🚀 Task Manager API
 
 A full-stack task management application built with **FastAPI, PostgreSQL, SQLAlchemy, Pydantic, HTML, CSS, and JavaScript**.
